@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio – Python & SQL</title>
+  <script src="https://cdn.tailwindcss.com "></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js "></script>
+  <style>
+    :root {
+      --bg-primary: #fdfcf7;   /* off-white */
+      --bg-secondary: #f7f8f9;
+      --card-bg: #fdfcf7;
+      --footer-bg: #f5f5f2;
+      --text-primary: #000000;  /* black in light mode */
+      --text-secondary: #374151; /* darker gray for secondary */
+      --accent-indigo: #4f46e5; /* indigo */
+      --accent-violet: #9333ea; /* violet */
+      --border: #e5e7eb;
+      --glass-fg: rgba(255,255,255,0.6);
+    }
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --card-bg: #111827;
+      --footer-bg: #0f172a;
+      --text-primary: #f1f5f9;   /* light text in dark mode */
+      --text-secondary: #94a3b8;
+      --accent-indigo: #6366f1; /* lighter indigo */
+      --accent-violet: #a855f7; /* lighter violet */
+      --border: #334155;
+      --glass-fg: rgba(255,255,255,0.06);
+    }
+    /* Base */
+    html,body {height:100%}
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background .25s ease, color .25s ease;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    /* Accessibility skip link */
+    .skip-link {
+      position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;
+    }
+    .skip-link:focus {
+      position:static;width:auto;height:auto;left:auto;clip:auto;padding:8px 12px;background:#111827;color:#fff;border-radius:6px;margin:8px;
+    }
+    /* Glass nav */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="dark"] .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .animated-icon {transition: transform .25s ease;}
+    .animated-icon:hover {transform: scale(1.08) rotate(3deg);}
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-violet) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* floating SVG */
+    @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .float-animation {animation: float 3s ease-in-out infinite;}
+    /* Embeds */
+    .embed-box {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed var(--border);
+    }
+    /* Pages */
+    .page {display:none}
+    .page.active {display:block}
+    /* Cards */
+    .card { background: var(--card-bg); border-radius: 16px; }
+    .card-hover { border: 2px solid transparent; transition: all .28s ease; }
+    .card-hover:hover {
+      border-image: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)) 1;
+      box-shadow: 0 12px 30px rgba(79,70,229,0.12);
+      transform: translateY(-4px);
+    }
+    .card-hover:focus { outline: 3px solid rgba(99,102,241,0.12); outline-offset: 4px; }
+    /* Nav link active & focus styles */
+    .nav-link { color: var(--text-primary); text-decoration:none; padding:6px; border-radius:6px; transition: color .2s, background .2s; display:inline-flex; align-items:center; gap:8px; }
+    .nav-link:hover, .nav-link:focus { color: var(--accent-indigo); }
+    .nav-link.active { font-weight:700; color: var(--accent-indigo); }
+    /* social icons hover gradient */
+    .social-icon { display:inline-flex; align-items:center; justify-content:center; padding:6px; border-radius:8px; transition: transform .18s ease, box-shadow .18s ease; color:var(--text-secondary); }
+    .social-icon:focus { outline:3px solid rgba(99,102,241,0.12); outline-offset:2px; }
+    .social-icon:hover { transform: translateY(-3px); color: inherit; box-shadow: 0 8px 20px rgba(99,102,241,0.08); }
+    .social-icon:hover i {
+      background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-violet) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* small helpers */
+    .visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+    a:focus { outline: none; }
+    button:focus { outline: none; }
+    /* responsive container similar to tailwind 'container' */
+    .container {max-width:1200px;margin-left:auto;margin-right:auto}
+    @media (max-width:768px) {
+      .md\\:hidden { display: none; }
+    }
+  </style>
+</head>
+<body class="font-sans" data-theme="light">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <!-- NAV -->
+  <nav class="fixed top-0 w-full z-50 glass" role="navigation" aria-label="Main navigation">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold gradient-text" aria-hidden="true">Portfolio</div>
+      <div class="hidden md:flex space-x-6" role="menubar" aria-label="Primary">
+        <a class="nav-link" data-page="home" href="#" role="menuitem" aria-label="Home"><i class="fas fa-home mr-1" aria-hidden="true"></i>Home</a>
+        <a class="nav-link" data-page="python" href="#" role="menuitem" aria-label="Python Projects"><i class="fas fa-code mr-1" aria-hidden="true"></i>Python</a>
+        <a class="nav-link" data-page="sql" href="#" role="menuitem" aria-label="SQL Projects"><i class="fas fa-server mr-1" aria-hidden="true"></i>SQL</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="theme-toggle" class="p-2 rounded-full glass animated-icon" aria-label="Toggle theme" aria-pressed="false" title="Toggle light / dark">
+          <i class="fas fa-moon text-xl" aria-hidden="true"></i>
+        </button>
+        <button id="mobile-menu-toggle" class="md:hidden p-2" aria-label="Open mobile menu" aria-expanded="false">
+          <i class="fas fa-bars text-xl" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2" aria-hidden="true">
+      <a class="block nav-link" data-page="home" href="#" role="menuitem" aria-label="Home (mobile)">Home</a>
+      <a class="block nav-link" data-page="python" href="#" role="menuitem" aria-label="Python Projects (mobile)">Python</a>
+      <a class="block nav-link" data-page="sql" href="#" role="menuitem" aria-label="SQL Projects (mobile)">SQL</a>
+    </div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <!-- HOME PAGE -->
+    <section id="home" class="page active pt-28 pb-12 px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="float-animation mb-6">
+          <svg class="w-24 h-24 mx-auto animated-icon" fill="none" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="80" stroke="url(#grad)" stroke-width="4" stroke-dasharray="377 377" stroke-linecap="round">
+              <animate attributeName="stroke-dashoffset" dur="3s" from="377" to="0" repeatCount="indefinite"/>
+            </circle>
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4f46e5"/>
+                <stop offset="100%" stop-color="#9333ea"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Hi, I'm Humam Al-Ogaidi</h1>
+        <p class="text-lg md:text-xl text-gray-800 dark:text-gray-300 mb-8">
+          Data Analyst: Python, SQL, Dashboards & Excel
+        </p>
+        <p class="text-lg md:text-xl text-gray-800 dark:text-gray-300 mb-8">
+          I'm Humam Al-Ogaidi, a data analyst with 2 years of experience at Shati Al-Ogaidi General Trading LTD. I build end to end analytics solutions including SQL pipelines, Python ETL, and automated Power BI dashboards that turn data into clear recommendations. My work contributed to a 6 percent sales uplift, a 22 percent reduction in median delivery time, and a 70 percent cut in manual reporting effort. I specialize in Python Pandas scikit learn, SQL MySQL PostgreSQL, Power BI DAX Power Query, and Looker, and I focus on reproducible workflows, interpretable models, and concise data storytelling to deliver measurable impact.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center" role="list">
+          <!-- Python card -->
+          <a data-page="python"
+             class="group block w-full sm:w-64 p-6 rounded-2xl card card-hover shadow-lg hover:shadow-2xl"
+             href="#" role="listitem" aria-label="Go to Python projects">
+            <i class="fas fa-code text-6xl mb-4 gradient-text group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+            <h2 class="text-2xl font-semibold mb-2">Python Projects</h2>
+            <p class="text-sm text-gray-800 dark:text-gray-300">ML models, ETL pipelines & data visualization.</p>
+          </a>
+          <!-- SQL card -->
+          <a data-page="sql"
+             class="group block w-full sm:w-64 p-6 rounded-2xl card card-hover shadow-lg hover:shadow-2xl"
+             href="#" role="listitem" aria-label="Go to SQL projects">
+            <i class="fas fa-server text-6xl mb-4 gradient-text group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+            <h2 class="text-2xl font-semibold mb-2">SQL Projects</h2>
+            <p class="text-sm text-gray-800 dark:text-gray-300">Database design, optimization & analytics.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+    <!-- PYTHON PAGE -->
+    <section id="python" class="page pt-28 pb-12 px-6">
+      <div class="max-w-6xl mx-auto space-y-12">
+        <div class="card rounded-2xl p-6 md:p-8 shadow-xl">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2 gradient-text">HR Analysis</h2>
+          <p class="text-gray-800 dark:text-gray-300 mb-6">Salary Prediction and HR Analytics for Data Professionals - developed a robust salary prediction model and conducted in-depth HR analytics to identify key drivers of salary, assess pay equity, and provide data-driven insights for compensation strategies.</p>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Project Description</h3>
+            <p class="text-gray-800 dark:text-gray-300">This project focuses on developing a robust salary prediction model and conducting in-depth HR analytics for data professionals within a company. Leveraging a comprehensive dataset that includes demographic information, employment details, performance ratings, and past experience, the project aims to identify key drivers of salary, assess pay equity, and provide data-driven insights for compensation strategies. The ultimate goal is to create a fair and transparent compensation framework that aligns with market trends and internal performance.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">The analytical process began with meticulous data cleaning and preprocessing. The initial dataset contained various attributes such as FIRST NAME, LAST NAME, SEX, DOJ (Date of Joining), CURRENT DATE, DESIGNATION, AGE, SALARY, UNIT, LEAVES USED, LEAVES REMAINING, RATINGS, and PAST EXP. Irrelevant columns were dropped, duplicates removed, and null values handled.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">Key findings included identifying AGE, PAST EXP, DESIGNATION, UNIT, and RATINGS as key salary drivers. The optimized ElasticNet model achieved exceptional performance on the test set, with a Mean Absolute Error (MAE) of approximately $4,600 and an R-squared value exceeding 0.90.</p>
+          </div>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Python Code (Google Colab)</h3>
+            <div class="embed-box">
+              <div class="text-center">
+                <i class="fab fa-python text-5xl mb-3 gradient-text" aria-hidden="true"></i>
+                <p class="text-sm text-gray-500">Interactive Python Notebook</p>
+                <a href="https://colab.research.google.com/drive/10q6cmLLFoW95o9kjdU09f2siFQVyNIUP?usp=sharing" 
+                   target="_blank" 
+                   class="mt-2 inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
+                  Open in Google Colab
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Dashboard </h3>
+            <div class="embed-box" style="min-height: 500px; padding: 0;">
+              <iframe width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiNmVkNmE5ZGItMjRiYS00YjBlLTlkMDItOWZkYjgyN2Q4OTg2IiwidCI6ImM5NGQzNzNmLTVmMzMtNDVmNC05MWVkLTdhMTIxMWM4MTFiOCIsImMiOjl9" frameborder="0" style="border:0; min-height: 500px;" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-2xl p-6 md:p-8 shadow-xl">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2 gradient-text">Car Market Analysis</h2>
+          <p class="text-gray-800 dark:text-gray-300 mb-6">Comprehensive analysis of car sales data to uncover insights into sales performance, pricing strategies, and market segmentation.</p>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Project Description</h3>
+            <p class="text-gray-800 dark:text-gray-300">This project delves into a comprehensive analysis of car sales data, aiming to uncover critical insights into sales performance, pricing strategies, and market segmentation. By examining a dataset containing various attributes such as Manufacturer, Model, Fuel type, Engine size, Mileage, Year of manufacture, and Price, the analysis provides a detailed understanding of the factors influencing car sales and pricing dynamics.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">Key findings revealed that Ford, VW, and Toyota emerged as top manufacturers in terms of sales volume. The analysis confirmed that a car's age and mileage are the most significant factors determining its price, followed by engine size. A counter-intuitive finding was that the average Toyota RAV4 (Compact SUV) was priced higher than the BMW X3, suggesting that age is a dominant pricing factor over brand prestige in this specific instance.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">The project successfully identified key drivers of sales volume, revenue, and pricing, while also shedding light on market segmentation and customer preferences. The findings underscore the importance of factors such as age, mileage, engine size, and fuel type in determining car prices.</p>
+          </div>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Python Code (Google Colab)</h3>
+            <div class="embed-box">
+              <div class="text-center">
+                <i class="fab fa-python text-5xl mb-3 gradient-text" aria-hidden="true"></i>
+                <p class="text-sm text-gray-500">Interactive Python Notebook</p>
+                <a href="https://colab.research.google.com/drive/14rG2buYCHyVuczRGEdy1fnk5O-y9AkOJ?usp=sharing" 
+                   target="_blank" 
+                   class="mt-2 inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
+                  Open in Google Colab
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Dashboard (Power BI)</h3>
+            <div class="embed-box" style="min-height: 500px; padding: 0;">
+              <iframe title="cars_dashboard" width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiMjJlMDg5NTQtZTkyMS00ODM3LTk1MTYtMDgyNDg0MmM0YWZjIiwidCI6ImM5NGQzNzNmLTVmMzMtNDVmNC05MWVkLTdhMTIxMWM4MTFiOCIsImMiOjl9" frameborder="0" style="border:0; min-height: 500px;" allowFullScreen="true"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card rounded-2xl p-6 md:p-8 shadow-xl">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2 gradient-text">Adult Income Analysis</h2>
+          <p class="text-gray-800 dark:text-gray-300 mb-6">Income Prediction and Socio-Economic Factor Analysis - comprehensive EDA to investigate factors influencing income levels within a demographic dataset.</p>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Project Description</h3>
+            <p class="text-gray-800 dark:text-gray-300">This project undertakes a comprehensive Exploratory Data Analysis (EDA) to investigate the factors influencing income levels within a demographic dataset. The primary objective was to uncover significant socio-economic indicators that correlate with an individual's income, specifically distinguishing between those earning <=50K and >50K annually.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">The analysis revealed a significant imbalance in income distribution, with approximately 76% of individuals earning <=50K and 24% earning >50K. Education emerged as a clear and significant determinant of income, with a correlation coefficient of 0.33. The analysis highlighted a non-linear relationship, where obtaining a Bachelor's degree serves as a critical inflection point, dramatically increasing an individual's chances of earning over $50K.</p>
+            <p class="text-gray-800 dark:text-gray-300 mt-2">The project uncovered significant income disparities based on sex and race, which persisted even after controlling for education and occupation. For instance, among Bachelor's degree holders, 49.5% of men earned >50K, compared to only 22.9% of women. Occupation was identified as a crucial factor in determining the return on education.</p>
+          </div>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">Python Code (Google Colab)</h3>
+            <div class="embed-box">
+              <div class="text-center">
+                <i class="fab fa-python text-5xl mb-3 gradient-text" aria-hidden="true"></i>
+                <p class="text-sm text-gray-500">Interactive Python Notebook</p>
+                <a href="https://colab.research.google.com/drive/15woA0nfwkyiUust1nWrAILJ_hSM_pivQ?usp=sharing" 
+                   target="_blank" 
+                   class="mt-2 inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
+                  Open in Google Colab
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Dashboard (Power BI)</h3>
+            <div class="embed-box" style="min-height: 500px; padding: 0;">
+              <iframe title="Adult_income_dashboard" width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiMDM5ODIxMWMtODY1Yy00Y2I4LWE0ZjUtY2Y4ZWI2OGZhN2I1IiwidCI6ImM5NGQzNzNmLTVmMzMtNDVmNC05MWVkLTdhMTIxMWM4MTFiOCIsImMiOjl9" frameborder="0" style="border:0; min-height: 500px;" allowFullScreen="true"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- SQL PAGE -->
+    <section id="sql" class="page pt-28 pb-12 px-6">
+      <div class="max-w-6xl mx-auto space-y-12">
+        <div class="card rounded-2xl p-6 md:p-8 shadow-xl">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2 gradient-text">SQL Projects Coming Soon</h2>
+          <p class="text-gray-800 dark:text-gray-300 mb-6">I'm currently working on developing SQL-focused projects to showcase my expertise in database design, optimization, and analytics. Please check back soon for updates!</p>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-2">What to Expect</h3>
+            <ul class="list-disc pl-5 text-gray-800 dark:text-gray-300 space-y-2">
+              <li>Complex SQL queries for business intelligence</li>
+              <li>Database schema design and optimization</li>
+              <li>ETL pipeline development with SQL</li>
+              <li>Performance tuning and query optimization</li>
+              <li>Real-world case studies from my professional experience</li>
+            </ul>
+          </div>
+          
+          <div class="embed-box">
+            <div class="text-center">
+              <i class="fas fa-database text-5xl mb-3 gradient-text" aria-hidden="true"></i>
+              <p class="text-sm text-gray-500">SQL projects under development</p>
+              <p class="mt-2">Check back soon for detailed SQL projects showcasing my expertise in MySQL, PostgreSQL, and database analytics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- FOOTER -->
+  <footer class="py-8 text-black dark:text-white" role="contentinfo">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <p class="mb-4 md:mb-0 text-sm text-gray-700 dark:text-gray-400">© 2024 Humam Al-Ogaidi</p>
+      <div class="flex space-x-4">
+        <a href="https://colab.research.google.com/drive/10q6cmLLFoW95o9kjdU09f2siFQVyNIUP?usp=sharing" target="_blank" class="social-icon" aria-label="Google Colab (opens in new tab)">
+          <i class="fab fa-python text-xl" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/humam-al-ogaidi-94bbab2a2/" target="_blank" class="social-icon" aria-label="LinkedIn (opens in new tab)">
+          <i class="fab fa-linkedin text-xl" aria-hidden="true"></i>
+        </a>
+        <a href="mailto:humamalogaidi0@gmail.com" class="social-icon" aria-label="Email">
+          <i class="fas fa-envelope text-xl" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // theme + UI behavior
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    // initial theme from storage or default to light
+    const saved = localStorage.getItem('theme');
+    const startTheme = saved ? saved : 'light';
+    html.setAttribute('data-theme', startTheme);
+    updateThemeIcon(startTheme);
+    function updateThemeIcon(t) {
+      const i = themeToggle.querySelector('i');
+      if (t === 'dark') {
+        i.className = 'fas fa-sun text-xl';
+        themeToggle.setAttribute('aria-pressed', 'true');
+        themeToggle.title = 'Switch to light mode';
+      } else {
+        i.className = 'fas fa-moon text-xl';
+        themeToggle.setAttribute('aria-pressed', 'false');
+        themeToggle.title = 'Switch to dark mode';
+      }
+    }
+    themeToggle.addEventListener('click', () => {
+      const nt = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', nt);
+      localStorage.setItem('theme', nt);
+      updateThemeIcon(nt);
+    });
+    // mobile menu toggle: show/hide + swap icon + aria
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      if (isOpen) {
+        mobileMenu.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.querySelector('i').className = 'fas fa-bars text-xl';
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      } else {
+        mobileMenu.classList.remove('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'true');
+        mobileToggle.querySelector('i').className = 'fas fa-times text-xl';
+        mobileMenu.setAttribute('aria-hidden', 'false');
+      }
+    });
+    // routing between pages
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add('active');
+      // nav link active state
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll(`[data-page="${id}"]`).forEach(l => l.classList.add('active'));
+      // update url hash (non-refresh) for deep linking
+      history.replaceState(null, '', '#' + id);
+      // move focus to main heading for accessibility
+      const heading = el.querySelector('h2, h1');
+      if (heading) heading.focus({preventScroll: true});
+      window.scrollTo(0,0);
+    }
+    // click handler for all link-like things with data-page
+    document.addEventListener('click', e => {
+      const link = e.target.closest('[data-page]');
+      if (!link) return;
+      e.preventDefault();
+      showPage(link.dataset.page);
+      // close mobile menu after navigation
+      if (!mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.querySelector('i').className = 'fas fa-bars text-xl';
+      }
+    });
+    // keyboard: allow Enter key activation on nav-link elements (they are anchors so it's already handled)
+    // init route from hash or default
+    const initial = location.hash ? location.hash.replace('#','') : 'home';
+    showPage(initial);
+  </script>
+</body>
+</html>
